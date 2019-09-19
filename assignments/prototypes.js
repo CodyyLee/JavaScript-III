@@ -17,12 +17,13 @@
 */
 
 function GameObject(attribute) {
-  this.createdAt: attribute.createdAt,
-  this.name: attribute.name,
-  this.dimensions: attribute.dimensions,
-  this.destroy: function() {
-    return `${this.name} was removed from the game`;
-  }
+  this.createdAt = attribute.createdAt,
+  this.name = attribute.name,
+  this.dimensions = attribute.dimensions
+}
+
+GameObject.prototype.destroy = function() {
+  return `${this.name} was removed from the game.`; 
 }
 
 /*
@@ -32,11 +33,15 @@ function GameObject(attribute) {
   * should inherit destroy() from GameObject's prototype
 */
 
-function(stats){
-  this.healthPoints: stats.health,
-  this.takeDamage: function() {
-    return 
-  }
+  CharacterStats = function(stats){
+  GameObject.call(this, stats)
+  this.healthPoints = stats.healthPoints
+}
+
+CharacterStats.prototype = Object.create(GameObject.prototype)
+
+CharacterStats.prototype.takeDamage = function() {
+  return `${this.name} took damage.`;
 }
 
 /*
@@ -48,6 +53,19 @@ function(stats){
   * should inherit destroy() from GameObject through CharacterStats
   * should inherit takeDamage() from CharacterStats
 */
+
+  Humanoid = function(characteristics) {
+  CharacterStats.call(this, characteristics)
+  this.team = characteristics.team,
+  this.weapons = characteristics.weapons,
+  this.language = characteristics.language
+}
+
+Humanoid.prototype = Object.create(CharacterStats.prototype)
+
+Humanoid.prototype.greet = function() {
+  return `${this.name} offers a greeting in ${this.language}`;
+}
  
 /*
   * Inheritance chain: GameObject -> CharacterStats -> Humanoid
@@ -57,7 +75,7 @@ function(stats){
 
 // Test you work by un-commenting these 3 objects and the list of console logs below:
 
-/*
+
   const mage = new Humanoid({
     createdAt: new Date(),
     dimensions: {
@@ -118,7 +136,7 @@ function(stats){
   console.log(archer.greet()); // Lilith offers a greeting in Elvish.
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
-*/
+
 
   // Stretch task: 
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
